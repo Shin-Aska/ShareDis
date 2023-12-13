@@ -1,0 +1,32 @@
+{
+    "name": "ShareDis",
+    "version": "1.0.0",
+    "manifest_version": 3,
+    "description": "Simple webpage sharing tool",
+    "action": {
+        "default_icon": "assets/detail_logo.png",
+        "default_popup": "popup.html"
+    },
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "page_action": {
+        "default_icon": "assets/svg.svg",
+        "default_title": "Open Side View",
+        "show_matches": ["http://*/*", "https://*/*"]
+    },
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "default": "Alt+Shift+X"
+            }
+        }
+    },
+    "permissions": ["tabs", "activeTab", "storage", "unlimitedStorage", "scripting", "clipboardWrite", "clipboardRead"],
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+    "host_permissions": ["<all_urls>"]
+}
