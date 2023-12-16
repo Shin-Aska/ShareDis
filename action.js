@@ -1,27 +1,76 @@
 function copyTitleAndURLToClipboard() {
     // Get the page title and URL
-    browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    browser.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
         console.log(tabs);
         let tab = tabs[0];
         const pageTitle = tab.title;
         const pageURL = tab.url;
 
-        pasteToClipboard(fillFormatStructure(pageURL, pageTitle, getFormat()))
+        pasteToClipboard(fillFormatStructure(pageURL, pageTitle, await getFormat()))
     });
-
 }
 
-tagify = new Tagify (document.getElementById("format-controller"));
-var dragsort = new DragSort(tagify.DOM.scope, {
-    selector: '.'+tagify.settings.classNames.tag,
-    callbacks: {
-        dragEnd: onDragEnd
-    }
+async function fill() {
+    document.getElementById("format-controller").value = convertFormatToTagify(await getFormat());
+}
+
+fill().then(function() {
+    var page_elements = [
+        { value: "title", text: 'TITLE', title: 'Page Title' },
+        { value: "url", text: 'URL', title: 'Page URL' }
+    ]
+
+    tagify = new Tagify (document.getElementById("format-controller"), {
+        mode: "mix",
+        pattern: /@|#/,
+        tagTextProp: "text",
+        whitelist: page_elements,
+        enforceWhitelist: true,
+        dropdown : {
+            enabled: 1,
+            position: "text",
+            mapValueTo: "text",
+            highlightFirst: true
+        },
+    });
 });
-tagify.addTags(["banana", "orange", "apple"]);
 
+document.getElementById("applyFormatBtn").onclick = () => {
+        var result = [];
+        var tags = document.querySelector(".tagify__input").childNodes;
 
-// must update Tagify's value according to the re-ordered nodes in the DOM
-function onDragEnd(elm){
-    tagify.updateValueByDOMTags()
+        for (let i = 0; i < tags.length; i++) {
+            // If NodeType is Text
+            if (tags[i].nodeType === 3) {
+                if (tags[i].textContent !== "" && tags[i].textContent !== "​") {
+                    result.push({
+                        "type": "string",
+                        "value": tags[i].textContent
+                    })
+                }
+            }
+            // If NodeType is Tag Element
+            else if (tags[i].nodeType === 1) {
+                if (tags[i].textContent === "TITLE") {
+                    result.push({
+                        "type": "title",
+                        "value": null
+                    })
+                }
+                else if (tags[i].textContent === "URL") {
+                    result.push({
+                        "type": "url",
+                        "value": null
+                    })
+                }
+            }
+        }
+
+        browser.storage.local.set({"format": JSON.stringify(result)}, () => {
+            alert("Success");
+        });
+    }
+
+document.getElementById("undoFormatBtn").onclick = async () => {
+    document.getElementById("format-controller").value = convertFormatToTagify(await getFormat());
 }
