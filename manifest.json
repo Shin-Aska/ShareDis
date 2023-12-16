@@ -4,7 +4,7 @@
     "manifest_version": 3,
     "description": "Simple webpage sharing tool",
     "action": {
-        "default_icon": "assets/detail_logo.png",
+        "default_icon": "assets/icon.png",
         "default_popup": "popup.html"
     },
     "background": {
