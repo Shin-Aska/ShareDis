@@ -8,7 +8,7 @@
         "default_popup": "popup.html"
     },
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["functionality.js","background.js"]
     },
     "page_action": {
         "default_icon": "assets/svg.svg",
