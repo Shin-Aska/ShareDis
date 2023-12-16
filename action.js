@@ -12,13 +12,14 @@ function copyTitleAndURLToClipboard() {
 }
 
 tagify = new Tagify (document.getElementById("format-controller"));
-tagify.addTags(["banana", "orange", "apple"]);
 var dragsort = new DragSort(tagify.DOM.scope, {
     selector: '.'+tagify.settings.classNames.tag,
     callbacks: {
         dragEnd: onDragEnd
     }
 });
+tagify.addTags(["banana", "orange", "apple"]);
+
 
 // must update Tagify's value according to the re-ordered nodes in the DOM
 function onDragEnd(elm){
