@@ -1,0 +1,7 @@
+.tagify--mix {
+    height: 200px;
+}
+
+.tagify__tag > div > * {
+    vertical-align: unset !important;
+}
