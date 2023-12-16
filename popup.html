@@ -7,18 +7,47 @@
         <script src="libraries/tagify/js/tagify.js"></script>
         <script src="libraries/tagify/js/tagify.polyfill.js"></script>
         <link rel="stylesheet" href="libraries/dragsort/css/dragsort.css">
+        <link rel="stylesheet" href="css/tagify-custom.css">
         <style>
             main {
                 width: 400px !important;
-                height: 400px;
+                height: 450px;
             }
         </style>
     </head>
-    <body>
+    <body style="--bs-body-font-size: 0.85rem">
+        <br>
         <main role="main" class="container">
-            <p class="lead">Format:</p>
-            <input id="format-controller" class="form-control" type="text" placeholder="Default input">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-format-tab" data-bs-toggle="pill" data-bs-target="#pills-format" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Format Editor</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-url-tab" data-bs-toggle="pill" data-bs-target="#pills-url" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">URL Transformer</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-format" role="tabpanel" aria-labelledby="pills-format-tab">
+
+                    <p class="lead">Format Editor Section:</p>
+                    <input id="format-controller" class="form-control" type="text" placeholder="Default input">
+                    <p>
+                        Control the format on how you share your links here. Edit the current format and then
+                        click the apply button. To add the TITLE and URL tags, simply type @ while editing and
+                        pressing T for TITLE and U for URL
+                    </p>
+
+                    <input id="applyFormatBtn" class="btn btn-primary" type="button" value="Apply">
+                    <input id="undoFormatBtn" class="btn btn-primary" type="button" value="Undo">
+                </div>
+
+                <div class="tab-pane fade" id="pills-url" role="tabpanel" aria-labelledby="pills-url-tab">
+                    <p class="lead">URL Transformer Section:</p>
+                </div>
+            </div>
         </main>
+
+
         <script src="libraries/dragsort/js/dragsort.js"></script>
         <script src="action.js"></script>
     </body>
