@@ -1,19 +1,45 @@
-function getFormat() {
-    return [
-        {
-            "type": "title",
-            "value": null
-        },
-        {
-            "type": "string",
-            "value": " - "
-        },
-        {
-            "type": "url",
-            "value": null
-        }
-    ]
+async function getFormat() {
+    return new Promise((resolve, reject) => {
+        browser.storage.local.get(["format"], (r) => {
+            if ("format" in r) {
+                resolve(JSON.parse(r.format));
+            }
+            else {
+                resolve([
+                    {
+                        "type": "title",
+                        "value": null
+                    },
+                    {
+                        "type": "string",
+                        "value": " - "
+                    },
+                    {
+                        "type": "url",
+                        "value": null
+                    }
+                ]);
+            }
+        })
+    })
 }
+
+function convertFormatToTagify(format) {
+    let result = "";
+    for (var i = 0; i < format.length; i++) {
+        if (format[i].type === "url") {
+            result += '[[{"value":"url","text":"URL","title":"Page URL","prefix":"@"}]]';
+        }
+        else if (format[i].type === "title") {
+            result += '[[{"value":"title","text":"TITLE","title":"Page Title","prefix":"@"}]]';
+        }
+        else {
+            result += format[i].value;
+        }
+    }
+    return result;
+}
+
 
 function fillFormatStructure(url, title, format) {
     for (let i = 0; i < format.length; i++) {
