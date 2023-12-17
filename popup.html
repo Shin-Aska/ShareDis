@@ -50,7 +50,18 @@
         </div>
 
         <div class="tab-pane fade" id="pills-url" role="tabpanel" aria-labelledby="pills-url-tab">
-            <p class="lead">URL Transformer Section:</p>
+            <p class="lead">URL Transformer Section [<abbr id="transformer-hostname"></abbr>]</p>
+            <input id="transformer-controller-regex" class="form-control" type="text" placeholder="Regex">
+            <p></p>
+            <input id="transformer-controller-output" class="form-control" type="text" placeholder="Output">
+            <p></p>
+            <input id="applyTransformerBtn" class="btn btn-primary" type="button" value="Apply">
+            <p></p>
+            <p>
+                Automatically transforms the URL base on the domain of the URL. Very helpful when trying to convert
+                links to a more approriate format such as converting YouTube shorts to their standard player format
+                or forcing the links you share to be always the desktop version.
+            </p>
         </div>
     </div>
 </main>
@@ -74,6 +85,7 @@
 
 <script src="libraries/dragsort/js/dragsort.js"></script>
 <script src="format.js"></script>
+<script src="transformer.js"></script>
 <script src="colors.js"></script>
 </body>
 </html>

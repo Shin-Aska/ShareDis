@@ -1,4 +1,11 @@
-async function getFormat() {
+class TransformerNotFound extends Error {
+  constructor(message = "", ...args) {
+    super(message, ...args);
+    this.message = message + " was not found in the transformer list";
+  }
+}
+
+async function getFormats() {
     return new Promise((resolve, reject) => {
         browser.storage.local.get([`format`], (r) => {
             if (`format` in r) {
@@ -24,28 +31,51 @@ async function getFormat() {
     })
 }
 
-async function getTransformer() {
+async function getTransformers() {
     return new Promise((resolve, reject) => {
         browser.storage.local.get([`transformers`], (r) => {
             if (`transformers` in r) {
-                let result = JSON.parse(r.format);
+                let result = JSON.parse(r.transformers);
                 Object.keys(result).forEach((domain) => {
                     try {
                         result[domain].regex = new RegExp(result[domain].regex);
                     }
                     catch (ex) {
-                        console.warn("Exception occured while fetching RegExp " + ex);
+                        console.warn(`Exception occured while fetching RegExp ` + ex);
                     }
                 });
                 resolve(result);
             }
             else {
                 resolve({
-                    "www.youtube.com": {"regex": /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([^\/?]+)$/i, "output": "https://www.youtube.com/watch?v=$1"},
-                    "m.youtube.com": {"regex": /^(?:https?:\/\/)?(?:m\.)?youtube\.com\/shorts\/([^\/?]+)$/i, "output": "https://www.youtube.com/watch?v=$1"}
+                    "www.youtube.com": {regex: /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([^\/?]+)$/i, output: "https://www.youtube.com/watch?v=$1"},
+                    "m.youtube.com": {regex: /^(?:https?:\/\/)?(?:m\.)?youtube\.com\/shorts\/([^\/?]+)$/i, output: "https://www.youtube.com/watch?v=$1"}
                 });
             }
         })
+    })
+}
+
+async function getTransformer(hostname) {
+    return new Promise(async (resolve, reject) => {
+        let transformers = await getTransformers();
+        if (hostname in transformers) {
+            resolve(transformers[hostname]);
+        }
+        reject(new TransformerNotFound(hostname))
+    });
+}
+
+async function updateTransformer(hostname, regex, output) {
+    return new Promise(async (resolve, reject) => {
+        let transformers = await getTransformers();
+        transformers[hostname].regex = regex;
+        transformers[hostname].output = output;
+
+        Object.keys(transformers).forEach((host) => {
+            transformers[host].regex = transformers[host].regex.source;
+        })
+        resolve(transformers);
     })
 }
 
@@ -94,11 +124,10 @@ async function fillFormatStructure(url, title, format) {
         }
         else if (format[i].type === `url`) {
             let hostname = getHostOfURL(url);
-            let transformers = await getTransformer();
+            let transformers = await getTransformers();
             if (hostname in transformers) {
                 let regex = transformers[hostname].regex;
                 let output = transformers[hostname].output;
-                console.log(transformers[hostname]);
                 format[i].value = url.replace(regex, output);
             }
             else {
@@ -123,4 +152,19 @@ function pasteToClipboard (format) {
         clipboardText += format[i].value;
     }
     navigator.clipboard.writeText(clipboardText);
+}
+
+function RegExpFromStr(patternString) {
+  // Remove leading and trailing slashes
+  let trimmedPattern = patternString.replace(/^\/|\/$/g, '');
+
+  // Extract flags from the end of the string
+  const flagsMatch = trimmedPattern.match(/([gimy]+)$/);
+  let flags = flagsMatch ? flagsMatch[1] : '';
+
+  // Remove flags from the pattern
+  trimmedPattern = trimmedPattern.replace(/\/?[gimy]+$/, '');
+
+  // Create and return the RegExp object
+  return new RegExp(trimmedPattern, flags);
 }

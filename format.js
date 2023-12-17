@@ -6,13 +6,13 @@ async function getFormatOutput() {
             const pageTitle = tab.title;
             const pageURL = tab.url;
 
-            resolve(await fillFormatStructure(pageURL, pageTitle, await getFormat()));
+            resolve(await fillFormatStructure(pageURL, pageTitle, await getFormats()));
         });
     });
 }
 
 async function fill() {
-    document.getElementById(`format-controller`).value = convertFormatToTagify(await getFormat());
+    document.getElementById(`format-controller`).value = convertFormatToTagify(await getFormats());
 }
 
 fill().then(async () => {
@@ -91,19 +91,19 @@ document.getElementById(`applyFormatBtn`).onclick = async () => {
 
         if (validateFormat(result)) {
             browser.storage.local.set({format: JSON.stringify(result)}, async () => {
-                showModal("Format saved", ["The format you have set has been saved. Changes have been " +
-                "applied and updated output pasted on the clipboard."], "success");
+                showModal(`Format saved`, [`The format you have set has been saved. Changes have been ` +
+                `applied and updated output pasted on the clipboard.`], "success");
                 let format = await getFormatOutput();
-                document.getElementById("format-output").value = formatAsString(format);
+                document.getElementById(`format-output`).value = formatAsString(format);
                 pasteToClipboard(format);
             });
         }
         else {
-            showModal("Format failed to save", ["The format you provided was not saved. Please check" +
-            " if your format has both the TITLE and URL tag provided."], "danger");
+            showModal(`Format failed to save`, [`The format you provided was not saved. Please check` +
+            ` if your format has both the TITLE and URL tag provided.`], `danger`);
         }
     }
 
 document.getElementById(`undoFormatBtn`).onclick = async () => {
-    document.getElementById(`format-controller`).value = convertFormatToTagify(await getFormat());
+    document.getElementById(`format-controller`).value = convertFormatToTagify(await getFormats());
 }
