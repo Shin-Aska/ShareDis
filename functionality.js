@@ -68,6 +68,14 @@ function fillFormatStructure(url, title, format) {
     return format;
 }
 
+function formatAsString (format) {
+    let clipboardText = ``;
+    for (var i = 0; i < format.length; i++) {
+        clipboardText += format[i].value;
+    }
+    return clipboardText;
+}
+
 function pasteToClipboard (format) {
     let clipboardText = ``;
     for (var i = 0; i < format.length; i++) {

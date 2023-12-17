@@ -1,12 +1,14 @@
-function copyTitleAndURLToClipboard() {
+async function getFormatOutput() {
     // Get the page title and URL
-    browser.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-        console.log(tabs);
-        let tab = tabs[0];
-        const pageTitle = tab.title;
-        const pageURL = tab.url;
+    return new Promise((resolve, reject) => {
+        browser.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+            console.log(tabs);
+            let tab = tabs[0];
+            const pageTitle = tab.title;
+            const pageURL = tab.url;
 
-        pasteToClipboard(fillFormatStructure(pageURL, pageTitle, await getFormat()))
+            resolve(fillFormatStructure(pageURL, pageTitle, await getFormat()));
+        });
     });
 }
 
@@ -14,7 +16,7 @@ async function fill() {
     document.getElementById(`format-controller`).value = convertFormatToTagify(await getFormat());
 }
 
-fill().then(function() {
+fill().then(async () => {
     var page_elements = [
         { value: `title`, text: `TITLE`, title: `Page Title` },
         { value: `url`, text: `URL`, title: `Page URL` }
@@ -33,6 +35,9 @@ fill().then(function() {
             highlightFirst: true
         },
     });
+    let format = await getFormatOutput();
+    document.getElementById("format-output").value = formatAsString(format);
+    pasteToClipboard(format);
 });
 
 
@@ -55,7 +60,7 @@ function showModal(title, messages, type) {
     modalBox.show();
 }
 
-document.getElementById(`applyFormatBtn`).onclick = () => {
+document.getElementById(`applyFormatBtn`).onclick = async () => {
         var result = [];
         var tags = document.querySelector(`.tagify__input`).childNodes;
 
@@ -86,8 +91,12 @@ document.getElementById(`applyFormatBtn`).onclick = () => {
         }
 
         if (validateFormat(result)) {
-            browser.storage.local.set({format: JSON.stringify(result)}, () => {
-                showModal("Format saved", ["The format you have set has been saved"], "success");
+            browser.storage.local.set({format: JSON.stringify(result)}, async () => {
+                showModal("Format saved", ["The format you have set has been saved. Changes have been " +
+                "applied and updated output pasted on the clipboard."], "success");
+                let format = await getFormatOutput();
+                document.getElementById("format-output").value = formatAsString(format);
+                pasteToClipboard(format);
             });
         }
         else {
