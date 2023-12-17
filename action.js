@@ -35,12 +35,15 @@ fill().then(function() {
     });
 });
 
+
 function showModal(title, messages) {
     document.getElementById(`modal-title`).innerHTML = title;
     document.getElementById(`modal-message`).innerHTML = ``;
     for (let i = 0; i < messages.length; i++) {
         document.getElementById(`modal-message`).innerHTML += `<p>${messages[i]}</p>`;
     }
+    var modalBox = new bootstrap.Modal(document.getElementById('modalBox'));
+    modalBox.show();
 }
 
 document.getElementById(`applyFormatBtn`).onclick = () => {
@@ -75,7 +78,7 @@ document.getElementById(`applyFormatBtn`).onclick = () => {
         }
 
         browser.storage.local.set({format: JSON.stringify(result)}, () => {
-            alert(`Success`);
+            showModal("Format saved", ["The format you have set has been saved"]);
         });
     }
 
