@@ -1,22 +1,22 @@
 async function getFormat() {
     return new Promise((resolve, reject) => {
-        browser.storage.local.get(["format"], (r) => {
-            if ("format" in r) {
+        browser.storage.local.get([`format`], (r) => {
+            if (`format` in r) {
                 resolve(JSON.parse(r.format));
             }
             else {
                 resolve([
                     {
-                        "type": "title",
-                        "value": null
+                        type: `title`,
+                        value: null
                     },
                     {
-                        "type": "string",
-                        "value": " - "
+                        type: `string`,
+                        value: ` - `
                     },
                     {
-                        "type": "url",
-                        "value": null
+                        type: `url`,
+                        value: null
                     }
                 ]);
             }
@@ -25,13 +25,13 @@ async function getFormat() {
 }
 
 function convertFormatToTagify(format) {
-    let result = "";
+    let result = ``;
     for (var i = 0; i < format.length; i++) {
-        if (format[i].type === "url") {
-            result += '[[{"value":"url","text":"URL","title":"Page URL","prefix":"@"}]]';
+        if (format[i].type === `url`) {
+            result += `[[{"value":"url","text":"URL","title":"Page URL","prefix":"@"}]]`;
         }
-        else if (format[i].type === "title") {
-            result += '[[{"value":"title","text":"TITLE","title":"Page Title","prefix":"@"}]]';
+        else if (format[i].type === `title`) {
+            result += `[[{"value":"title","text":"TITLE","title":"Page Title","prefix":"@"}]]`;
         }
         else {
             result += format[i].value;
@@ -40,14 +40,13 @@ function convertFormatToTagify(format) {
     return result;
 }
 
-
 function fillFormatStructure(url, title, format) {
     for (let i = 0; i < format.length; i++) {
         let structure = format[i];
-        if (format[i].type === "title") {
+        if (format[i].type === `title`) {
             format[i].value = title;
         }
-        else if (format[i].type === "url") {
+        else if (format[i].type === `url`) {
             format[i].value = url;
         }
     }
@@ -55,7 +54,7 @@ function fillFormatStructure(url, title, format) {
 }
 
 function pasteToClipboard (format) {
-    let clipboardText = "";
+    let clipboardText = ``;
     for (var i = 0; i < format.length; i++) {
         clipboardText += format[i].value;
     }
