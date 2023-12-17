@@ -2,12 +2,11 @@ async function getFormatOutput() {
     // Get the page title and URL
     return new Promise((resolve, reject) => {
         browser.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-            console.log(tabs);
             let tab = tabs[0];
             const pageTitle = tab.title;
             const pageURL = tab.url;
 
-            resolve(fillFormatStructure(pageURL, pageTitle, await getFormat()));
+            resolve(await fillFormatStructure(pageURL, pageTitle, await getFormat()));
         });
     });
 }
