@@ -12,7 +12,7 @@
     },
     "page_action": {
         "default_icon": "assets/svg.svg",
-        "default_title": "Open Side View",
+        "default_title": "Share this page",
         "show_matches": ["http://*/*", "https://*/*"]
     },
     "commands": {
@@ -22,7 +22,7 @@
             }
         }
     },
-    "permissions": ["tabs", "activeTab", "storage", "unlimitedStorage", "scripting", "clipboardWrite", "clipboardRead"],
+    "permissions": ["tabs", "activeTab", "storage", "scripting", "clipboardWrite", "clipboardRead"],
     "icons": {
         "16": "icon16.png",
         "48": "icon48.png",
