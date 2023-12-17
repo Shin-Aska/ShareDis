@@ -36,11 +36,20 @@ fill().then(function() {
 });
 
 
-function showModal(title, messages) {
+function showModal(title, messages, type) {
     document.getElementById(`modal-title`).innerHTML = title;
     document.getElementById(`modal-message`).innerHTML = ``;
     for (let i = 0; i < messages.length; i++) {
         document.getElementById(`modal-message`).innerHTML += `<p>${messages[i]}</p>`;
+    }
+
+    if (type === `success`) {
+        document.getElementById(`modal-title`).className = `modal-title text-success`;
+        document.getElementById(`modal-ok-btn`).className = `btn btn-success`
+    }
+    else if (type === `danger`) {
+        document.getElementById(`modal-title`).className = `modal-title text-danger`;
+        document.getElementById(`modal-ok-btn`).className = `btn btn-danger`
     }
     var modalBox = new bootstrap.Modal(document.getElementById('modalBox'));
     modalBox.show();
@@ -78,12 +87,12 @@ document.getElementById(`applyFormatBtn`).onclick = () => {
 
         if (validateFormat(result)) {
             browser.storage.local.set({format: JSON.stringify(result)}, () => {
-                showModal("Format saved", ["The format you have set has been saved"]);
+                showModal("Format saved", ["The format you have set has been saved"], "success");
             });
         }
         else {
             showModal("Format failed to save", ["The format you provided was not saved. Please check" +
-            "if your format has both the TITLE and URL tag provided."]);
+            " if your format has both the TITLE and URL tag provided."], "danger");
         }
     }
 
