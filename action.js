@@ -67,8 +67,7 @@ document.getElementById(`applyFormatBtn`).onclick = () => {
                         type: `title`,
                         value: null
                     })
-                }
-                else if (tags[i].textContent === `URL`) {
+                } else if (tags[i].textContent === `URL`) {
                     result.push({
                         type: `url`,
                         value: null
@@ -77,9 +76,15 @@ document.getElementById(`applyFormatBtn`).onclick = () => {
             }
         }
 
-        browser.storage.local.set({format: JSON.stringify(result)}, () => {
-            showModal("Format saved", ["The format you have set has been saved"]);
-        });
+        if (validateFormat(result)) {
+            browser.storage.local.set({format: JSON.stringify(result)}, () => {
+                showModal("Format saved", ["The format you have set has been saved"]);
+            });
+        }
+        else {
+            showModal("Format failed to save", ["The format you provided was not saved. Please check" +
+            "if your format has both the TITLE and URL tag provided."]);
+        }
     }
 
 document.getElementById(`undoFormatBtn`).onclick = async () => {

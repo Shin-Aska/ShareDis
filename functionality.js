@@ -40,6 +40,21 @@ function convertFormatToTagify(format) {
     return result;
 }
 
+function validateFormat(format) {
+    var hasTitle = false;
+    var hasURL = false;
+    for (let i = 0; i < format.length; i++) {
+        if (format[i].type === `title`) {
+            hasTitle = true;
+        }
+        else if (format[i].type === `url`) {
+            hasURL = true;
+        }
+    }
+    console.log([hasTitle, hasURL, format]);
+    return hasTitle && hasURL;
+}
+
 function fillFormatStructure(url, title, format) {
     for (let i = 0; i < format.length; i++) {
         let structure = format[i];
