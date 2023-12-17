@@ -10,10 +10,10 @@ Then this plugin is for you! With this plugin, you are able to easily share link
 For development:
 
 1. Clone this repo
-2. Open up Firefox and go to the extensions page (Window → Extensions)
-3. Enable developer mode (if it’s not already)
-4. Click on “Load unpacked extension…”
-5. Select the folder for this app
+2. Open up Firefox and go to the debugging page (about:debugging)
+3. Click This Firefox
+4. Click on “Load temporary addons”
+5. Select the manifest.json of this repo
 
 
 ### Extra notes:
