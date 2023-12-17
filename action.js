@@ -35,6 +35,14 @@ fill().then(function() {
     });
 });
 
+function showModal(title, messages) {
+    document.getElementById(`modal-title`).innerHTML = title;
+    document.getElementById(`modal-message`).innerHTML = ``;
+    for (let i = 0; i < messages.length; i++) {
+        document.getElementById(`modal-message`).innerHTML += `<p>${messages[i]}</p>`;
+    }
+}
+
 document.getElementById(`applyFormatBtn`).onclick = () => {
         var result = [];
         var tags = document.querySelector(`.tagify__input`).childNodes;
