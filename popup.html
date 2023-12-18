@@ -2,17 +2,21 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="functionality.js"></script>
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="libraries/bootstrap-5.3.2-dist/css/bootstrap.css">
     <script src="libraries/bootstrap-5.3.2-dist/js/bootstrap.js"></script>
+    <!-- Tagify -->
     <link rel="stylesheet" href="libraries/tagify/css/tagify.css">
     <script src="libraries/tagify/js/tagify.js"></script>
     <script src="libraries/tagify/js/tagify.polyfill.js"></script>
     <link rel="stylesheet" href="libraries/dragsort/css/dragsort.css">
     <link rel="stylesheet" href="css/tagify-custom.css">
+    <!-- qrious -->
+    <script src="libraries/qrious/js/qrious.js"></script>
     <style>
         main {
-            width: 400px !important;
-            height: 450px;
+            width: 500px !important;
+            height: 520px;
         }
     </style>
 </head>
@@ -28,6 +32,11 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="pills-url-tab" data-bs-toggle="pill" data-bs-target="#pills-url" type="button"
                     role="tab" aria-controls="pills-profile" aria-selected="false">URL Transformer
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-qr-tab" data-bs-toggle="pill" data-bs-target="#pills-qr" type="button"
+                    role="tab" aria-controls="pills-profile" aria-selected="false">QR Code
             </button>
         </li>
     </ul>
@@ -64,6 +73,18 @@
                 or forcing the links you share to be always the desktop version.
             </p>
         </div>
+
+        <div class="tab-pane fade" id="pills-qr" role="tabpanel" aria-labelledby="pills-url-tab">
+            <p class="lead">QR Code</p>
+            <p></p>
+            <canvas id="qr"></canvas>
+            <p></p>
+            <p>
+                Share the link into QR Code fashion. Either save the image and attach it somewhere else, copy it on
+                Clipboard
+            </p>
+            <input id="copyQRImageToClipboardBtn" class="btn btn-primary" type="button" value="Copy QR to Clipboard">
+        </div>
     </div>
 </main>
 
@@ -88,5 +109,6 @@
 <script src="format.js"></script>
 <script src="transformer.js"></script>
 <script src="colors.js"></script>
+<script src="qr.js"></script>
 </body>
 </html>

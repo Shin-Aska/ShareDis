@@ -1,6 +1,6 @@
 {
   "name": "ShareDis",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "manifest_version": 3,
   "description": "Simple webpage sharing tool",
   "browser_specific_settings": {
@@ -41,7 +41,6 @@
     "tabs",
     "activeTab",
     "storage",
-    "scripting",
     "clipboardWrite",
     "clipboardRead"
   ],
@@ -49,8 +48,5 @@
     "16": "icon16.png",
     "48": "icon48.png",
     "128": "icon128.png"
-  },
-  "host_permissions": [
-    "<all_urls>"
-  ]
+  }
 }
