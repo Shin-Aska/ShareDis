@@ -49,7 +49,7 @@ async function getTransformers() {
             else {
                 resolve({
                     "www.youtube.com": {regex: /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([^\/?]+)$/i, output: "https://www.youtube.com/watch?v=$1"},
-                    "m.youtube.com": {regex: /^(?:https?:\/\/)?(?:m\.)?youtube\.com\/shorts\/([^\/?]+)$/i, output: "https://www.youtube.com/watch?v=$1"}
+                    "m.youtube.com": {regex: /^https?:\/\/(?:m\.)?youtube\.com\/(?:shorts\/)?(?:watch\?v=)?([^\/?]+)$/i, output: "https://www.youtube.com/watch?v=$1"}
                 });
             }
         })
