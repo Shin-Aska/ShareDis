@@ -16,7 +16,7 @@ For development:
 5. Select the manifest.json of this repo
 
 For actual use:
-1. Visit the AMO page for this addon: https://addons.mozilla.org/en-US/firefox/addon/sharedis/
+1. Visit the AMO page for this addon: https://addons.mozilla.org/firefox/addon/sharedis/
 2. Click the Add to Firefox button
 
 Alternatively, you can install it directly here at Github via going into the release section
