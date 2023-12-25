@@ -36,7 +36,6 @@ fill().then(async () => {
     });
     let format = await getFormatOutput();
     document.getElementById("format-output").value = formatAsString(format);
-    pasteToClipboard(format);
 });
 
 
@@ -57,6 +56,11 @@ function showModal(title, messages, type) {
     }
     var modalBox = new bootstrap.Modal(document.getElementById('modalBox'));
     modalBox.show();
+}
+
+document.getElementById(`copyFormatOutputToClipboardBtn`).onclick = async () => {
+    let format = await getFormatOutput();
+    pasteToClipboard(format);
 }
 
 document.getElementById(`applyFormatBtn`).onclick = async () => {
