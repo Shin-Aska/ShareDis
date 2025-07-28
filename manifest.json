@@ -41,6 +41,7 @@
     "tabs",
     "activeTab",
     "storage",
+    "contextMenus",
     "clipboardWrite",
     "clipboardRead"
   ],
