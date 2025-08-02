@@ -1,39 +1,44 @@
 class TransformerNotFound extends Error {
-  constructor(message = "", ...args) {
-    super(message, ...args);
-    this.message = message + " was not found in the transformer list";
-  }
+    constructor(message = "", ...args) {
+        super(message, ...args);
+        this.message = message + " was not found in the transformer list";
+    }
 }
 
-async function getFormats() {
-    return new Promise((resolve, reject) => {
-        browser.storage.local.get([`format`], (r) => {
-            if (`format` in r) {
+async function getFormats(method = "default") {
+    return new Promise((resolve) => {
+        browser.storage.local.get(["format"], (r) => {
+            if (r.format) {
                 resolve(JSON.parse(r.format));
+                return;
             }
-            else {
-                resolve([
-                    {
-                        type: `title`,
-                        value: null
-                    },
-                    {
-                        type: `string`,
-                        value: ` - `
-                    },
-                    {
-                        type: `url`,
-                        value: null
-                    }
-                ]);
-            }
-        })
-    })
+            const defaults = {
+                quote: [
+                    { type: "title", value: null },
+                    { type: "string", value: " quoted from: " },
+                    { type: "url", value: null }
+                ],
+                default: [
+                    { type: "title", value: null },
+                    { type: "string", value: " - " },
+                    { type: "url", value: null }
+                ]
+            };
+            resolve(defaults[method] || defaults.default);
+        });
+    });
+}
+
+function defaultTransformers() {
+    return {
+        "www.youtube.com": { regex: /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([^\/?]+)$/i, output: "https://www.youtube.com/watch?v=$1" },
+        "m.youtube.com": { regex: /^(?:https?:\/\/)?(?:m\.)?youtube\.com\/shorts\/([^\/?]+)(?:\?[^\/]*)?$/i, output: "https://www.youtube.com/watch?v=$1" }
+    }
 }
 
 async function getTransformers() {
     return new Promise((resolve, reject) => {
-        browser.storage.local.get([`transformers`], (r) => {
+        browser.storage.local.get([`transformers`], async (r) => {
             if (`transformers` in r) {
                 let result = JSON.parse(r.transformers);
                 Object.keys(result).forEach((domain) => {
@@ -47,10 +52,7 @@ async function getTransformers() {
                 resolve(result);
             }
             else {
-                resolve({
-                    "www.youtube.com": {regex: /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([^\/?]+)$/i, output: "https://www.youtube.com/watch?v=$1"},
-                    "m.youtube.com": {regex: /^(?:https?:\/\/)?(?:m\.)?youtube\.com\/shorts\/([^\/?]+)(?:\?[^\/]*)?$/i, output: "https://www.youtube.com/watch?v=$1"}
-                });
+                resolve(defaultTransformers())
             }
         })
     })
@@ -69,9 +71,26 @@ async function getTransformer(hostname) {
 async function updateTransformer(hostname, regex, output) {
     return new Promise(async (resolve, reject) => {
         let transformers = await getTransformers();
+        if (!Object.keys(transformers).includes(hostname)) {
+            console.log('Cocksucker')
+            transformers[hostname] = {
+                regex: null, output: null
+            };
+        }
         transformers[hostname].regex = regex;
         transformers[hostname].output = output;
 
+        Object.keys(transformers).forEach((host) => {
+            transformers[host].regex = transformers[host].regex.source;
+        })
+        resolve(transformers);
+    })
+}
+
+async function removeTransformer(hostname) {
+    return new Promise(async (resolve, reject) => {
+        let transformers = await getTransformers();
+        delete transformers[hostname];
         Object.keys(transformers).forEach((host) => {
             transformers[host].regex = transformers[host].regex.source;
         })
@@ -138,7 +157,7 @@ async function fillFormatStructure(url, title, format) {
     return format;
 }
 
-function formatAsString (format) {
+function formatAsString(format) {
     let clipboardText = ``;
     for (var i = 0; i < format.length; i++) {
         clipboardText += format[i].value;
@@ -146,7 +165,7 @@ function formatAsString (format) {
     return clipboardText;
 }
 
-function pasteToClipboard (format) {
+function pasteToClipboard(format) {
     let clipboardText = ``;
     for (var i = 0; i < format.length; i++) {
         clipboardText += format[i].value;
@@ -155,16 +174,16 @@ function pasteToClipboard (format) {
 }
 
 function RegExpFromStr(patternString) {
-  // Remove leading and trailing slashes
-  let trimmedPattern = patternString.replace(/^\/|\/$/g, '');
+    // Remove leading and trailing slashes
+    let trimmedPattern = patternString.replace(/^\/|\/$/g, '');
 
-  // Extract flags from the end of the string
-  const flagsMatch = trimmedPattern.match(/([gimy]+)$/);
-  let flags = flagsMatch ? flagsMatch[1] : '';
+    // Extract flags from the end of the string
+    const flagsMatch = trimmedPattern.match(/([gimy]+)$/);
+    let flags = flagsMatch ? flagsMatch[1] : '';
 
-  // Remove flags from the pattern
-  trimmedPattern = trimmedPattern.replace(/\/?[gimy]+$/, '');
+    // Remove flags from the pattern
+    trimmedPattern = trimmedPattern.replace(/\/?[gimy]+$/, '');
 
-  // Create and return the RegExp object
-  return new RegExp(trimmedPattern, flags);
+    // Create and return the RegExp object
+    return new RegExp(trimmedPattern, flags);
 }

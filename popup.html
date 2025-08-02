@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="css/tagify-custom.css">
     <!-- qrious -->
     <script src="libraries/qrious/js/qrious.js"></script>
+    <link rel="stylesheet" href="libraries/jdatatable/css/datatables.css">
+    <script src="libraries/jdatatable/js/datatables.js"></script>
     <style>
         main {
             width: 500px !important;
@@ -30,13 +32,18 @@
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-url-tab" data-bs-toggle="pill" data-bs-target="#pills-url" type="button"
-                    role="tab" aria-controls="pills-profile" aria-selected="false">URL Transformer
+            <button class="nav-link" id="pills-qr-tab" data-bs-toggle="pill" data-bs-target="#pills-qr" type="button"
+                    role="tab" aria-controls="pills-profile" aria-selected="false">QR Code
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-qr-tab" data-bs-toggle="pill" data-bs-target="#pills-qr" type="button"
-                    role="tab" aria-controls="pills-profile" aria-selected="false">QR Code
+            <button class="nav-link" id="pills-url-tab" data-bs-toggle="pill" data-bs-target="#pills-url" type="button"
+                    role="tab" aria-controls="pills-profile" aria-selected="false">Apply Transformers
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-url-tbl-tab" data-bs-toggle="pill" data-bs-target="#pills-url-tbl" 
+                    type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Transformers
             </button>
         </li>
     </ul>
@@ -85,6 +92,32 @@
             </p>
             <input id="copyQRImageToClipboardBtn" class="btn btn-primary" type="button" value="Copy QR to Clipboard">
         </div>
+
+        <div class="tab-pane fade" id="pills-url-tbl" role="tabpanel" aria-labelledby="pills-url-tab">
+            <p class="lead">URL Transformer Table</p>
+            <p></p>
+            <p>
+                Shows all URL transformers configured on this installation. You can remove, import and export
+                plugins transformers here.
+            </p>
+            <table id="transformer-table">
+                <thead>
+                    <tr>
+                        <th>Domain</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="transformer-body">
+                    <tr>
+                        <td>www.youtube.com</td>
+                        <td>
+                            <input class="btn btn-primary center" type="button" value="Edit">
+                            <input class="btn btn-primary center" type="button" value="Remove">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </main>
 
@@ -110,5 +143,6 @@
 <script src="transformer.js"></script>
 <script src="colors.js"></script>
 <script src="qr.js"></script>
+<script src="jdatatable.js"></script>
 </body>
 </html>
