@@ -29,9 +29,16 @@ async function getFormats(method = "default") {
     });
 }
 
+function defaultTransformers() {
+    return {
+        "www.youtube.com": { regex: /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([^\/?]+)$/i, output: "https://www.youtube.com/watch?v=$1" },
+        "m.youtube.com": { regex: /^(?:https?:\/\/)?(?:m\.)?youtube\.com\/shorts\/([^\/?]+)(?:\?[^\/]*)?$/i, output: "https://www.youtube.com/watch?v=$1" }
+    }
+}
+
 async function getTransformers() {
     return new Promise((resolve, reject) => {
-        browser.storage.local.get([`transformers`], (r) => {
+        browser.storage.local.get([`transformers`], async (r) => {
             if (`transformers` in r) {
                 let result = JSON.parse(r.transformers);
                 Object.keys(result).forEach((domain) => {
@@ -45,10 +52,7 @@ async function getTransformers() {
                 resolve(result);
             }
             else {
-                resolve({
-                    "www.youtube.com": { regex: /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([^\/?]+)$/i, output: "https://www.youtube.com/watch?v=$1" },
-                    "m.youtube.com": { regex: /^(?:https?:\/\/)?(?:m\.)?youtube\.com\/shorts\/([^\/?]+)(?:\?[^\/]*)?$/i, output: "https://www.youtube.com/watch?v=$1" }
-                });
+                resolve(defaultTransformers())
             }
         })
     })
@@ -67,9 +71,26 @@ async function getTransformer(hostname) {
 async function updateTransformer(hostname, regex, output) {
     return new Promise(async (resolve, reject) => {
         let transformers = await getTransformers();
+        if (!Object.keys(transformers).includes(hostname)) {
+            console.log('Cocksucker')
+            transformers[hostname] = {
+                regex: null, output: null
+            };
+        }
         transformers[hostname].regex = regex;
         transformers[hostname].output = output;
 
+        Object.keys(transformers).forEach((host) => {
+            transformers[host].regex = transformers[host].regex.source;
+        })
+        resolve(transformers);
+    })
+}
+
+async function removeTransformer(hostname) {
+    return new Promise(async (resolve, reject) => {
+        let transformers = await getTransformers();
+        delete transformers[hostname];
         Object.keys(transformers).forEach((host) => {
             transformers[host].regex = transformers[host].regex.source;
         })
